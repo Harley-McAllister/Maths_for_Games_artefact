@@ -13,17 +13,18 @@ public class MyVector2
         this.y = y;
     }
 
-    static MyVector2 AddVectors(MyVector2 a, MyVector2 b)
+    public MyVector2 AddVectors(MyVector2 a, MyVector2 b)
     {
         //Adding two vector2s together
         MyVector2 rv = new MyVector2(0, 0);
         rv.x = a.x + b.x;
         rv.y = a.y + b.y;
 
+        Debug.Log("Vectors added");
         return rv;
     }
 
-    static MyVector2 SubVectors(MyVector2 a, MyVector2 b)
+    public MyVector2 SubVectors(MyVector2 a, MyVector2 b)
     {
         //Subtracting two vector2s together
         MyVector2 rv = new MyVector2(0, 0);
