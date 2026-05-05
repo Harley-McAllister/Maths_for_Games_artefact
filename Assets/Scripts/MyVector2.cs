@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class MyVector2
 {
-    /// Creating my own Vector2 class
-
     public float x;
     public float y;
 
@@ -15,18 +13,16 @@ public class MyVector2
 
     public MyVector2 AddVectors(MyVector2 a, MyVector2 b)
     {
-        //Adding two vector2s together
         MyVector2 rv = new MyVector2(0, 0);
         rv.x = a.x + b.x;
         rv.y = a.y + b.y;
 
-        Debug.Log("Vectors added");
+        //Debug.Log("Vectors added");
         return rv;
     }
 
     public MyVector2 SubVectors(MyVector2 a, MyVector2 b)
     {
-        //Subtracting two vector2s together
         MyVector2 rv = new MyVector2(0, 0);
         rv.x = a.x - b.x;
         rv.y = a.y - b.y;
@@ -36,7 +32,6 @@ public class MyVector2
 
     public float VectorLength()
     {
-        //Calculating the length of a vector2 with pythagorus
         float rv = 0f;
 
         rv = Mathf.Sqrt(x * x + y * y);
@@ -46,7 +41,6 @@ public class MyVector2
 
     public float VectorLengthSq()
     {
-        //Calculating the length of a vector2 before square rooting it
         float rv = 0f;
 
         rv = (x * x + y * y);
@@ -56,14 +50,12 @@ public class MyVector2
 
     public Vector2 ToUnityVector()
     {
-        //Converting my vector2 to a unity vector2
         Vector2 rv = new Vector2(x, y);
         return rv;
     }
 
     static MyVector2 ScaleVector(MyVector2 a, float scalar)
     {
-        //Scaling MyVector2 by a scalar value
         MyVector2 rv = new MyVector2(0, 0);
         rv.x = a.x * scalar;
         rv.y = a.y * scalar;
@@ -73,7 +65,6 @@ public class MyVector2
 
     static MyVector2 DivVector(MyVector2 a, float divider)
     {
-        //Dividing MyVector2 by a dividing value
         MyVector2 rv = new MyVector2(0, 0);
         rv.x = a.x / divider;
         rv.y = a.y / divider;
@@ -81,9 +72,25 @@ public class MyVector2
         return rv;
     }
 
+    public bool OverlapVectors(MyVector2 a, MyVector2 b)
+    { 
+        bool rv = false;
+
+
+        if (a.x - b.x < 1f && a.x - b.x > -1f)
+        { 
+            if (a.y - b.y < 1f && a.y - b.y > -1f)
+            {
+                rv = true;
+                Debug.Log("Vectors overlap");
+            }
+        }
+
+        return rv;
+    }
+
     public MyVector2 NormalizedVector()
     {
-        //Normalizing Myvector2
         MyVector2 rv = new MyVector2(0, 0);
 
         rv = DivVector(this, this.VectorLength());
@@ -93,7 +100,6 @@ public class MyVector2
 
     static float VectorDotProd(MyVector2 a, MyVector2 b, bool normalized = true)
     {
-        //Conducting dot product between two vector2s, defaulting with normalized vectors
         float rv = 0.0f;
 
         if (normalized)
@@ -108,6 +114,15 @@ public class MyVector2
             rv = a.x * b.x + a.y * b.y;
         }
 
+        return rv;
+    }
+
+    public float VectorAngle(MyVector2 a)
+    {
+        float rv = 0.0f;
+
+        rv = Mathf.Atan2(a.y, a.x);
+        Debug.Log("Angle = " + rv);
         return rv;
     }
 
