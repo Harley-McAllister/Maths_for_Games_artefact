@@ -77,9 +77,9 @@ public class MyVector2
         bool rv = false;
 
 
-        if (a.x - b.x < 1f && a.x - b.x > -1f)
+        if (a.x - b.x < 1.25f && a.x - b.x > -1.25f)
         { 
-            if (a.y - b.y < 1f && a.y - b.y > -1f)
+            if (a.y - b.y < 1.25f && a.y - b.y > -1.25f)
             {
                 rv = true;
                 Debug.Log("Vectors overlap");
@@ -98,7 +98,7 @@ public class MyVector2
         return rv;
     }
 
-    static float VectorDotProd(MyVector2 a, MyVector2 b, bool normalized = true)
+    public float VectorDotProd(MyVector2 a, MyVector2 b, bool normalized = true)
     {
         float rv = 0.0f;
 
@@ -122,7 +122,29 @@ public class MyVector2
         float rv = 0.0f;
 
         rv = Mathf.Atan2(a.y, a.x);
-        Debug.Log("Angle = " + rv);
+        //Debug.Log("Angle = " + rv);
+        return rv;
+    }
+
+    public float DegreesToRadians(float degrees)
+    {
+        float rv = 0.0f;
+        rv = degrees * (Mathf.PI / 180f);
+        return rv;
+    }
+
+    public float RadiansToDegrees(float radians)
+    {
+        float rv = 0.0f;
+        rv = radians * (180f / Mathf.PI);
+        return rv;
+    }
+
+    public MyVector2 VectorFromAngle(float radians)
+    { 
+        MyVector2 rv = new MyVector2(0, 0);
+        rv.x = Mathf.Cos(radians);
+        rv.y = Mathf.Sin(radians);
         return rv;
     }
 

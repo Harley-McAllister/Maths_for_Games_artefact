@@ -4,13 +4,40 @@ public class EnemyMovement : MonoBehaviour
 {
     private MyVector2 enemyPos;
     private MyVector2 enemyDir;
+    private MyVector2 defaultPos;
+    private MyVector2 playerPos;
     private float spawnTimer = 0f;
+    private float speed;
+    private float distance;
 
     void Start()
     {
-        enemyPos = new MyVector2(0,0);
-        enemyDir = new MyVector2(0,0);
+        if (this.CompareTag("Red"))
+        {
+            defaultPos = new MyVector2(0, 0);
+            speed = 3f;
+        }
+        else if (this.CompareTag("Blue"))
+        {
+            defaultPos = new MyVector2(2, 0);
+            speed = 4f;
+        }
+        else if (this.CompareTag("Pink"))
+        {
+            defaultPos = new MyVector2(4, 0);
+            speed = 4.5f;
+        }
+        else if (this.CompareTag("Orange"))
+        {
+            defaultPos = new MyVector2(-1.5f, 0);
+            speed = 2f;
+        }
+
+        enemyPos = defaultPos;
+        enemyDir = defaultPos;
         transform.position = enemyPos.ToUnityVector();
+
+
 
     }
 
@@ -22,39 +49,80 @@ public class EnemyMovement : MonoBehaviour
         }
         else
         {
-            enemyDir = enemyPos.SubVectors(enemyPos, Player_Movement.instance.GetPos());
-            transform.position = enemyPos.ToUnityVector();
-            enemyPos = enemyPos.SubVectors(enemyPos, enemyDir);
-
-            if (enemyPos.x >= 18)
+            playerPos = Player_Movement.instance.GetPos();
+            if (Player_Movement.instance.getPowerUpState() == false)
             {
-                enemyPos = new MyVector2(-19, enemyPos.y);
+                enemyDir = enemyPos.SubVectors(playerPos, enemyPos);
             }
-            else if (enemyPos.x <= -18)
+            else if (Player_Movement.instance.getPowerUpState() == true)
             {
-                enemyPos = new MyVector2(19, enemyPos.y);
+                enemyDir = enemyPos.SubVectors(enemyPos, playerPos);
             }
 
-            if (enemyPos.y >= 10)
+
+            distance = enemyDir.VectorLength();
+            if (distance > 0.0001f)
             {
-                enemyPos = new MyVector2(enemyPos.x, -11);
-            }
-            else if (enemyPos.y <= -10)
-            {
-                enemyPos = new MyVector2(enemyPos.x, 11);
+                MyVector2 dirNorm = enemyDir.NormalizedVector();
+                MyVector2 movement = new MyVector2(dirNorm.x * speed * Time.deltaTime, dirNorm.y * speed * Time.deltaTime);
+
+                enemyPos = enemyPos.AddVectors(enemyPos, movement);
+                transform.position = enemyPos.ToUnityVector();
             }
 
-            CollisionCheck();
+
+            if (enemyPos.x >= 37)
+            {
+                enemyPos = new MyVector2(-36, enemyPos.y);
+            }
+            else if (enemyPos.x <= -37)
+            {
+                enemyPos = new MyVector2(36, enemyPos.y);
+            }
+
+            if (enemyPos.y >= 19)
+            {
+                enemyPos = new MyVector2(enemyPos.x, -18);
+            }
+            else if (enemyPos.y <= -19)
+            {
+                enemyPos = new MyVector2(enemyPos.x, 18);
+            }
+
         }
     }
 
+    private void FixedUpdate()
+    {
+        CollisionCheck();
+    }
+
+    public void ResetToDefault()
+    {
+        spawnTimer = 0f;
+        enemyPos = defaultPos;
+        enemyDir = defaultPos;
+    }
+
+
     private void CollisionCheck()
-    { 
-        if (enemyPos.OverlapVectors(enemyPos, Player_Movement.instance.GetPos()))
+    {
+        if (Player_Movement.instance.getPowerUpState() == false)
         {
-            Player_Movement.instance.TakeDamage();
-            spawnTimer = 0f;
-            enemyPos = new MyVector2(0, 0);
+            if (enemyPos.OverlapVectors(enemyPos, playerPos))
+            {
+                Player_Movement.instance.TakeDamage();
+                ResetToDefault();
+            }
         }
+        else if (Player_Movement.instance.getPowerUpState() == true)
+        {
+            if (enemyPos.OverlapVectors(enemyPos, playerPos))
+            {
+                Player_Movement.instance.AddEnemyScore();
+                ResetToDefault();
+            }
+        }
+
     }
 }
